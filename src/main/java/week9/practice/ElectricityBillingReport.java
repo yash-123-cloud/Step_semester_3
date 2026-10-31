@@ -1,0 +1,86 @@
+import java.util.Scanner;
+
+abstract class ElectricityConnection {
+    int units;
+
+    ElectricityConnection(int units) {
+        this.units = units;
+    }
+
+    abstract double calculateBill();
+}
+
+class HomeConnection extends ElectricityConnection {
+    HomeConnection(int units) {
+        super(units);
+    }
+
+    double calculateBill() {
+        if (units <= 100) {
+            return units * 5.0;
+        }
+        return (100 * 5.0) + ((units - 100) * 7.0);
+    }
+}
+
+class ShopConnection extends ElectricityConnection {
+    ShopConnection(int units) {
+        super(units);
+    }
+
+    double calculateBill() {
+        return (units * 8.0) + 100;
+    }
+}
+
+class FactoryConnection extends ElectricityConnection {
+    FactoryConnection(int units) {
+        super(units);
+    }
+
+    double calculateBill() {
+        return Math.max(units * 6.0, 1000.0);
+    }
+}
+
+class ElectricityBillingReport {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        int n = sc.nextInt();
+        ElectricityConnection[] connections =
+                new ElectricityConnection[n];
+
+        String[] types = new String[n];
+        double total = 0;
+
+        for (int i = 0; i < n; i++) {
+            types[i] = sc.next();
+            int units = sc.nextInt();
+
+            switch (types[i]) {
+                case "HOME":
+                    connections[i] = new HomeConnection(units);
+                    break;
+
+                case "SHOP":
+                    connections[i] = new ShopConnection(units);
+                    break;
+
+                case "FACTORY":
+                    connections[i] = new FactoryConnection(units);
+                    break;
+            }
+        }
+
+        for (int i = 0; i < n; i++) {
+            double bill = connections[i].calculateBill();
+
+            System.out.printf("%s: %.2f%n", types[i], bill);
+            total += bill;
+        }
+
+        System.out.printf("Total: %.2f%n", total);
+        sc.close();
+    }
+}
